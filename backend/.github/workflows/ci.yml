@@ -1,0 +1,65 @@
+name: Build, test, and validate
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, type-check, and test
+    timeout-minutes: 30
+    # skip ci if PR has label 'skip-ci' or 'skip-actions'
+    if: |
+      !contains(github.event.pull_request.labels.*.name, 'skip-ci') &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-actions')
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.3
+          run_install: false
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint code
+        run: pnpm lint:check
+
+      - name: Type-check project
+        run: pnpm typecheck
+
+      - name: Run unit tests
+        run: pnpm exec jest --runInBand
+
+      - name: Run API end-to-end tests
+        run: pnpm test:e2e --runInBand
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Build docs
+        run: pnpm docs:build
+
+      - name: Validate production Docker image
+        run: docker build --target production --tag nestjs-boilerplate:ci .

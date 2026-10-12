@@ -1,0 +1,51 @@
+{
+  "name": "realworld-angular",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint",
+    "prepare": "husky install",
+    "format:write": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "private": true,
+  "engines": {
+    "node": "^22.22.0 || >=24.13.1"
+  },
+  "dependencies": {
+    "@angular/cdk": "^21.2.10",
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "@fontsource/geist": "^5.2.8",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular-eslint/builder": "21.3.1",
+    "@angular/build": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "21.3.1",
+    "eslint": "^10.0.3",
+    "husky": "^9.1.7",
+    "jsdom": "^28.0.0",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "8.56.1",
+    "vitest": "^4.0.8"
+  },
+  "lint-staged": {
+    "*.{js,ts,html}": "eslint --cache --fix",
+    "*.{js,ts,html,css,json,md,yml,yaml}": "prettier --write"
+  }
+}
